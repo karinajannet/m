@@ -1,0 +1,73 @@
+[build]
+  publish = "."
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "no-referrer"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+    X-Robots-Tag = "noindex, nofollow, noarchive, nosnippet"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/datos.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Las fotos tampoco van marcadas como inmutables, por lo mismo que
+# los videos: si se retoca una foto y se sube con el mismo nombre, el
+# navegador que ya la tenía seguiría enseñando la vieja durante un año.
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+# Los videos NO van marcados como inmutables.
+# Lo estaban, con un año de caducidad, y eso significa que si se
+# reemplaza un video sin cambiarle el nombre el teléfono sigue
+# reproduciendo el viejo durante un año sin ni siquiera preguntar.
+# Con esto, cada visita comprueba si cambió: cuesta un viaje corto y
+# evita que un arreglo no llegue nunca.
+[[headers]]
+  for = "/videos/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+[[headers]]
+  for = "/sonidos/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/audios/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/icon.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/app.webmanifest"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# El editor es solo para ti: no se publica en internet.
+[[redirects]]
+  from = "/EDITOR.html"
+  to = "/"
+  status = 404
+  force = true

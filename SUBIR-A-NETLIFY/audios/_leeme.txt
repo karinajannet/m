@@ -1,0 +1,40 @@
+CARPETA  audios/
+================
+
+Aqui van los mp3. Se usan en dos sitios distintos:
+
+
+1) LA MUSICA DE FONDO
+---------------------
+Es la opcion RECOMENDADA para Corea del Sur: suena al instante y no
+depende de YouTube.
+
+  - MP3 (o M4A). Nombres sin espacios ni acentos:  set0909.mp3
+  - En el EDITOR, pestana "4 · Musica", "+ Anadir pista":
+        Titulo:  SET 0909
+        Artista: Mariposa
+        Archivo: audios/set0909.mp3
+
+Si pones dos o mas pistas, en la seccion "Set" del sitio aparece
+la lista completa para que ella elija.
+
+
+2) LAS NOTAS DE VOZ DE LAS CARTAS
+---------------------------------
+  - En el EDITOR, pestana "3 · Cartas", campo "Nota de voz":
+        audios/nota-de-gabby.mp3
+
+  - Suena sola al abrir la carta. La playlist se pausa mientras dura
+    y vuelve sola al terminar.
+
+  - La barra trae su propio control de volumen (bocina con un +), que
+    llega al 300 %. Sirve para las notas que quedaron muy bajitas. Las
+    primeras veces sale un aviso corto para que se vea que esta ahi, y
+    en cuanto pasa del 100 % el boton muestra el porcentaje. Lo que se
+    elija se recuerda y se aplica a todas las demas.
+
+  - Formatos: MP3, M4A, y tambien MP4 / MOV / 3GP, que es lo que
+    sueltan muchos celulares al grabar. El sitio los abre igual.
+
+  - Si un archivo no carga, la barra lo dice con calma y ofrece
+    "Reintentar"; la musica nunca se queda muda por eso.

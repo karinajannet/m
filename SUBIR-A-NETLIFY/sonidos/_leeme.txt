@@ -1,0 +1,23 @@
+SONIDOS DE LA INTERFAZ
+======================
+
+Estos tres NO son contenido: son los sonidos que hace el sitio.
+
+  ventana.mp3   la notificación de cada ventana que se enciende (Acto 2)
+  latido.mp3    el corazón de la esfera (Acto 3)
+  fuegos.mp3    la cascarita de los fuegos al dar ABRIR
+
+Pesan 58 KB entre los tres y se cargan una sola vez, al dar PLAY.
+
+Si quieres cambiar alguno: reemplaza el archivo con el mismo nombre. No
+hay que tocar nada más. Formato mp3, y cortos —la notificación por debajo
+de un segundo, el latido UN solo lub-dub (el sitio lo repite y lo
+acelera él), los fuegos dos o tres segundos.
+
+Si borras uno, el sitio no se queda mudo: vuelve solo al sonido
+sintetizado que trae dentro.
+
+El del latido lleva casi toda su energía por debajo de 200 Hz, que es
+donde la bocina de un teléfono ya no llega. Por eso el sitio le añade un
+golpe en la zona media encima. Si cambias ese archivo por uno con más
+cuerpo, ese refuerzo sobra y se puede bajar (djSub en padEsfera).

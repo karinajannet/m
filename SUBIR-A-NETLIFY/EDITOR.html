@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Editor · MARIPOSA 0909</title>
+<meta name="robots" content="noindex,nofollow"/>
+<style>
+:root{
+  --ink:#06070F; --ink2:#0B0E1E; --card:rgba(255,255,255,.045); --card2:rgba(255,255,255,.075);
+  --line:rgba(237,241,255,.13); --t1:#EDF1FF; --t2:rgba(237,241,255,.66); --t3:rgba(237,241,255,.38);
+  --blue:#4C8DFF; --violet:#9B6BFF; --cyan:#45E4FF; --mint:#8CE2C4; --rose:#FF9CC8; --gold:#FFD98A;
+  --iris:linear-gradient(115deg,#4C8DFF,#9B6BFF 48%,#45E4FF);
+  --sans:'Space Grotesk',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Malgun Gothic',sans-serif;
+  --r:16px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse 120% 70% at 50% -10%,#0D1435,#06070F 55%);
+  color:var(--t1);font-family:var(--sans);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.55}
+a{color:var(--cyan)}
+h1,h2,h3{margin:0 0 6px;font-weight:700;letter-spacing:-.01em}
+header{position:sticky;top:0;z-index:30;background:rgba(6,7,15,.9);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--line);padding:14px 20px}
+.hrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;max-width:1080px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;font-size:.96rem;font-weight:700;letter-spacing:.06em}
+.logo svg{width:30px}
+.grow{flex:1}
+.wrap{max-width:1080px;margin:0 auto;padding:22px 20px 120px}
+.tabs{display:flex;gap:5px;overflow-x:auto;padding:5px;background:rgba(255,255,255,.04);border:1px solid var(--line);
+  border-radius:999px;margin:0 auto 24px;width:max-content;max-width:100%}
+.tabs button{white-space:nowrap;padding:9px 18px;border:0;border-radius:999px;background:none;color:var(--t2);
+  font:inherit;font-size:.84rem;font-weight:600;cursor:pointer;transition:.25s}
+.tabs button[aria-selected="true"]{background:var(--iris);color:#050813}
+.panel[hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:14px}
+.card > h3{font-size:1.02rem;margin-bottom:4px}
+.card > .sub{color:var(--t3);font-size:.82rem;margin:0 0 16px}
+.g{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+label.f{display:block}
+label.f > span{display:block;font-size:.72rem;letter-spacing:.06em;color:var(--t3);margin-bottom:5px;text-transform:uppercase}
+input,textarea,select{width:100%;padding:11px 13px;border-radius:11px;border:1px solid var(--line);
+  background:rgba(255,255,255,.04);color:var(--t1);font:inherit;font-size:.9rem;outline:none;transition:.2s}
+input:focus,textarea:focus,select:focus{border-color:rgba(69,228,255,.55);box-shadow:0 0 0 3px rgba(69,228,255,.1)}
+textarea{min-height:96px;resize:vertical;line-height:1.6}
+.hint{font-size:.74rem;color:var(--t3);margin-top:5px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border:1px solid var(--line);border-radius:999px;
+  background:rgba(255,255,255,.05);color:var(--t1);font:inherit;font-size:.84rem;font-weight:600;cursor:pointer;transition:.25s}
+.btn:hover{background:rgba(255,255,255,.11);transform:translateY(-1px)}
+.btn.p{background:var(--iris);color:#050813;border-color:transparent;box-shadow:0 12px 30px -12px rgba(120,160,255,.7)}
+.btn.d{border-color:rgba(255,120,150,.4);color:#FF9CC8}
+.btn.s{padding:7px 12px;font-size:.76rem}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.item{border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:10px;background:rgba(255,255,255,.028)}
+.ih{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.ih b{font-size:.88rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;background:rgba(255,255,255,.07);
+  font-size:.7rem;color:var(--t2)}
+.chip.ok{background:rgba(140,226,196,.16);color:var(--mint)}
+.chip.wait{background:rgba(255,217,138,.14);color:var(--gold)}
+.flagbox{display:block;width:34px;height:23px;border-radius:5px;overflow:hidden;border:1px solid var(--line);flex-shrink:0;background:#0A1030}
+.flagbox svg{width:100%;height:100%;display:block}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:13px 20px calc(13px + env(safe-area-inset-bottom,0px));
+  background:rgba(6,7,15,.94);backdrop-filter:blur(20px);border-top:1px solid var(--line)}
+.bar .in{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.note{padding:14px 16px;border-radius:12px;background:rgba(76,141,255,.09);border:1px solid rgba(76,141,255,.24);
+  font-size:.84rem;color:var(--t2);margin-bottom:16px}
+.note b{color:var(--t1)}
+.ok{background:rgba(140,226,196,.1);border-color:rgba(140,226,196,.3)}
+.warn{background:rgba(255,217,138,.09);border-color:rgba(255,217,138,.28)}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:88px;z-index:60;display:flex;flex-direction:column;gap:8px;align-items:center}
+#toast div{padding:12px 20px;border-radius:999px;background:rgba(12,16,36,.96);border:1px solid var(--line);
+  font-size:.84rem;box-shadow:0 18px 40px -18px rgba(0,0,0,.9);animation:up .4s cubic-bezier(.34,1.56,.44,1)}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+details{border:1px solid var(--line);border-radius:12px;padding:12px 15px;margin-bottom:10px;background:rgba(255,255,255,.025)}
+summary{cursor:pointer;font-weight:600;font-size:.88rem}
+details p,details li{color:var(--t2);font-size:.86rem}
+code{background:rgba(255,255,255,.08);padding:2px 7px;border-radius:6px;font-size:.84em}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:9px;margin-bottom:16px}
+.kpi div{padding:13px;border-radius:12px;background:var(--card);border:1px solid var(--line);text-align:center}
+.kpi b{display:block;font-size:1.4rem;background:var(--iris);-webkit-background-clip:text;background-clip:text;color:transparent}
+.kpi span{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
+
+/* los desplegables se leen igual en cualquier sistema */
+select{-webkit-appearance:none;appearance:none;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,var(--t2) 50%),linear-gradient(135deg,var(--t2) 50%,transparent 50%);
+  background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:38px}
+select option{background:#0B0E1E;color:#EDF1FF;padding:8px}
+
+/* buscador y rejilla de paises */
+.pickbox{border:1px solid var(--line);border-radius:var(--r);padding:14px;background:rgba(255,255,255,.028);margin-bottom:16px}
+.pickbox .srch{position:relative;margin-bottom:12px}
+.pickbox .srch input{padding-left:38px;font-size:.95rem}
+.pickbox .srch span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:1rem}
+.paisgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;
+  max-height:330px;overflow-y:auto;padding:2px}
+.paisbtn{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:12px;cursor:pointer;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);color:#EDF1FF;
+  font:inherit;font-size:.88rem;text-align:left;transition:.18s;min-height:46px}
+.paisbtn:hover{background:rgba(76,141,255,.2);border-color:rgba(76,141,255,.55);transform:translateY(-1px)}
+.paisbtn .flagbox{width:30px;height:20px}
+.paisbtn .nm{flex:1;min-width:0;font-weight:600;color:#FFFFFF;font-size:.84rem;line-height:1.16;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.paisbtn .iso{font-size:.62rem;letter-spacing:.12em;color:var(--t3);font-weight:700;
+  background:rgba(255,255,255,.08);padding:2px 6px;border-radius:5px}
+.paisbtn.ya{background:rgba(140,226,196,.13);border-color:rgba(140,226,196,.42)}
+.paisbtn.ya .nm{color:var(--mint)}
+.paisbtn.ya .iso::after{content:' ✓'}
+.paisvacio{grid-column:1/-1;color:var(--t3);font-size:.86rem;padding:14px;text-align:center}
+.isochip{font-size:.62rem;letter-spacing:.14em;font-weight:700;color:var(--t2);
+  background:rgba(255,255,255,.09);padding:3px 8px;border-radius:6px}
+.thumb916{width:38px;height:66px;border-radius:7px;object-fit:cover;border:1px solid var(--line);background:#0A1030;flex-shrink:0}
+@media(max-width:640px){ .wrap{padding:16px 14px 130px} .card{padding:15px} .paisgrid{grid-template-columns:1fr 1fr} }
+
+    .chatprev{display:flex;flex-direction:column;gap:6px;margin-top:2px}
+    .chatprev span{
+      display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
+      max-width:100%;padding:7px 13px;border-radius:999px;
+      background:rgba(120,140,220,.14);border:1px solid rgba(180,200,255,.22);
+      font-size:.82rem;line-height:1.25;
+    }
+    .chatprev span:nth-child(2){opacity:.72}
+    .chatprev span:nth-child(3){opacity:.5}
+    .chatprev em{font-style:normal;opacity:.5}
+</style>
+</head>
+<body>
+<header><div class="hrow">
+  <span class="logo">
+    <svg viewBox="0 0 100 80" aria-hidden="true"><defs><linearGradient id="eg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4C8DFF"/><stop offset="50%" stop-color="#9B6BFF"/><stop offset="100%" stop-color="#45E4FF"/></linearGradient></defs>
+      <path d="M50,32 C40,18 15,10 6,22 C0,30 8,44 24,44 C34,44 44,40 50,32 Z" fill="url(#eg)" fill-opacity=".8"/>
+      <path d="M50,40 C42,44 26,60 16,58 C8,56 8,46 16,42 C26,38 40,36 50,40 Z" fill="url(#eg)" fill-opacity=".62"/>
+      <path d="M50,32 C60,18 85,10 94,22 C100,30 92,44 76,44 C66,44 56,40 50,32 Z" fill="url(#eg)" fill-opacity=".8"/>
+      <path d="M50,40 C58,44 74,60 84,58 C92,56 92,46 84,42 C74,38 60,36 50,40 Z" fill="url(#eg)" fill-opacity=".62"/>
+      <ellipse cx="50" cy="38" rx="2.5" ry="19" fill="#0A1030" fill-opacity=".9"/></svg>
+    EDITOR · 0909
+  </span>
+  <span class="grow"></span>
+  <button class="btn" id="bLoad">📂 Abrir datos.js</button>
+  <button class="btn" id="bJson">💾 Copia de respaldo</button>
+  <input type="file" id="fileIn" accept=".js,.json,.txt" hidden/>
+</div></header>
+
+<div class="wrap">
+
+<div class="tabs" role="tablist">
+  <button role="tab" data-p="basics"  aria-selected="true">1 · Lo básico</button>
+  <button role="tab" data-p="actos"   aria-selected="false">2 · Los actos</button>
+  <button role="tab" data-p="cartas"  aria-selected="false">3 · Cartas</button>
+  <button role="tab" data-p="musica"  aria-selected="false">4 · Música</button>
+  <button role="tab" data-p="voces"   aria-selected="false">5 · Voces</button><button role="tab" data-p="sala"    aria-selected="false">6 · Videos</button><button role="tab" data-p="final"   aria-selected="false">7 · Final</button>
+  <button role="tab" data-p="ayuda"   aria-selected="false">? · Ayuda</button>
+</div>
+
+<!-- ============ BASICOS ============ -->
+<section class="panel" id="p-basics">
+  <div class="note">Esto es lo que ella verá en la portada. Puedes dejarlo tal cual si ya está bien.</div>
+  <div class="card">
+    <h3>Ella</h3>
+    <p class="sub">Nombre real, nombre artístico y su cumpleaños.</p>
+    <div class="g g2">
+      <label class="f"><span>Nombre</span><input data-c="nombre"/></label>
+      <label class="f"><span>Nombre en coreano</span><input data-c="nombreKo"/></label>
+      <label class="f"><span>Nombre artístico</span><input data-c="alias"/></label>
+      <label class="f"><span>Artístico en coreano</span><input data-c="aliasKo"/></label>
+      <label class="f"><span>Profesión</span><input data-c="oficio"/></label>
+      <label class="f"><span>Cumpleaños</span><input data-c="cumple" type="date"/></label>
+      <label class="f"><span>Zona horaria</span>
+        <select data-c="zonaHoraria">
+          <option value="Asia/Seoul">Seúl (Corea del Sur)</option>
+          <option value="America/Mexico_City">Ciudad de México</option>
+          <option value="America/Bogota">Bogotá</option>
+          <option value="America/Lima">Lima</option>
+          <option value="America/Santiago">Santiago</option>
+          <option value="America/Argentina/Buenos_Aires">Buenos Aires</option>
+          <option value="Europe/Madrid">Madrid</option>
+        </select></label>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Al abrir el sitio</h3>
+    <p class="sub">Idioma de inicio y, si quieres, una clave para que nadie más lo abra.</p>
+    <div class="g g2">
+      <label class="f"><span>Idioma</span>
+        <select data-c="idioma">
+          <option value="auto">Automático (según su teléfono)</option>
+          <option value="ko">Coreano siempre</option>
+          <option value="es">Español siempre</option>
+          <option value="en">Inglés siempre</option>
+        </select></label>
+      <label class="f"><span>Clave (opcional)</span><input data-c="clave" placeholder="vacío = sin clave"/>
+        <p class="hint">Si pones algo, habrá que escribirlo para entrar.</p></label>
+      <label class="f"><span>Pista de la clave</span><input data-c="pista" placeholder="ej: la fecha de tu cumple"/>
+        <p class="hint">Se ve debajo del recuadro de la clave. Déjalo vacío si no quieres pista.</p></label>
+      <label class="f"><span>La pregunta del muro de voces</span><input data-c="pregunta" placeholder="¿de qué te salvó un live de Mariposa?"/>
+        <p class="hint">Vacío = se usa la de siempre, traducida a los 3 idiomas.</p></label>
+      <label class="f" style="grid-column:1/-1"><span>Firma del final</span><input data-c="firma"/></label>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REWIND ============ -->
+<section class="panel" id="p-actos" hidden>
+  <div class="note"><b>La historia se cuenta en cinco actos.</b> Aquí cambias las frases de cada uno.
+  Deja cualquiera <b>en blanco</b> y sale la frase por defecto, ya traducida a español, coreano e inglés.</div>
+
+  <div class="card">
+    <h3>Acto 1 · Las ventanas se encienden</h3>
+    <p class="sub">Cae la noche en husos horarios distintos. Una ventana por país con cartas: se van
+    encendiendo en onda y cada una suelta su mensajito de chat. Dura entre 15 y 25 segundos.</p>
+    <label class="f"><span>Frase pequeña de arriba</span>
+      <input data-t="acto1Kicker" placeholder="cae la noche, una hora distinta en cada casa"/></label>
+    <label class="f"><span>Titular</span>
+      <textarea data-t="acto1Titulo" rows="2" placeholder="Pantallas encendidas que cambian el ruido del mundo por un momento de paz."></textarea></label>
+    <label class="f"><span>Debajo del titular</span>
+      <textarea data-t="acto1Sub" rows="2" placeholder="Cada ventana es alguien que decidió soltar sus cargas y encontró un respiro en tu live."></textarea></label>
+  </div>
+
+  <div class="card">
+    <h3>Las etiquetas de chat del Acto 1</h3>
+    <p class="sub">Saltan cuando se enciende cada ventana, como el chat de un live. Una por línea.
+    Puedes usar <code>{pais}</code>, <code>{n}</code> (cuántas cartas mandó ese país) y
+    <code>{personas}</code>. Déjalo vacío y salen las de serie.</p>
+    <label class="f"><span>Una por línea</span>
+      <textarea id="chatPool" rows="9" placeholder="{pais} súper fan se unió al vuelo&#10;{pais} acaba de llegar&#10;{pais} dejó sus problemas atrás"></textarea></label>
+    <p class="sub" style="margin-bottom:6px">Así se van a ver:</p>
+    <div id="chatPrev" class="chatprev"></div>
+  </div>
+
+  <div class="card">
+    <h3>Acto 2 · El resplandor</h3>
+    <p class="sub">La luz se come las ventanas y de ella sale esta frase, sola en pantalla.</p>
+    <label class="f"><span>La frase</span>
+      <textarea data-t="acto2" rows="3" placeholder="Cuando llegamos a tu live, los problemas se apagan por un momento y se enciende… la magia de Mariposa."></textarea></label>
+  </div>
+
+  <div class="card">
+    <h3>Acto 3 · La esfera y el regalo</h3>
+    <p class="sub">La esfera flota girando muy despacio con el texto alrededor y un botón de una sola
+    palabra. <b>Aquí no hay contadores a propósito</b>: los números salen una única vez, al final.</p>
+    <label class="f"><span>Arriba de la esfera</span><input data-t="acto3Titulo" placeholder="FELIZ CUMPLEAÑOS"/></label>
+    <label class="f"><span>Debajo de la esfera</span><input data-t="acto3Nombre" placeholder="MARIPOSA"/></label>
+    <label class="f"><span>El botón</span><input data-t="acto3Boton" placeholder="ABRIR"/></label>
+  </div>
+
+  <div class="card">
+    <h3>Acto 5 · El amanecer</h3>
+    <p class="sub">Salta al cerrar la última carta, una sola vez. Escribe
+    <code>{TOTAL_CARTAS}</code> y <code>{TOTAL_PAISES}</code> donde quieras los números:
+    se cuentan solos desde la pestaña “Cartas”. Este es el <b>único</b> sitio del regalo con números.</p>
+    <label class="f"><span>Titular (déjalo vacío y se usa la primera frase del mensaje)</span>
+      <input data-t="acto5Titulo" placeholder=""/></label>
+    <label class="f"><span>El mensaje</span>
+      <textarea data-t="acto5Mensaje" rows="4" placeholder="¡Misión cumplida, Mariposa! Abriste las {TOTAL_CARTAS} cartas. Desde {TOTAL_PAISES} lugares distintos, hoy todos coinciden en mandarte la mejor energía. ¡A celebrar y a disfrutar la vida, que nada te detenga!"></textarea></label>
+    <p class="sub" id="actoAviso"></p>
+  </div>
+</section>
+
+<section class="panel" id="p-cartas" hidden>
+  <div class="kpi" id="kpi"></div>
+  <div class="note"><b>Las cartas.</b> Añade un país y dentro sus cartas. Si una carta todavía no llega,
+  déjala vacía: el sitio la muestra como <i>“viene en camino”</i> y no se rompe nada.</div>
+  <div class="pickbox">
+    <h3 style="font-size:.96rem;margin-bottom:4px">Añadir un país</h3>
+    <p class="sub" style="color:var(--t3);font-size:.8rem;margin:0 0 12px">
+      Escribe para buscar y toca la bandera. Los que ya están salen en verde.</p>
+    <div class="srch"><span aria-hidden="true">⌕</span>
+      <input id="qPais" type="search" autocomplete="off" spellcheck="false"
+             placeholder="México, Corea del Sur, Perú, Brasil…" aria-label="Buscar país"/></div>
+    <div class="paisgrid" id="paisGrid"></div>
+  </div>
+  <div id="paises"></div>
+</section>
+
+<!-- ============ VOCES ============ -->
+<section class="panel" id="p-voces" hidden>
+  <div class="note"><b>El muro de voces.</b><br>
+  Una sola línea de cada seguidor respondiendo a una pregunta. En el sitio pasan
+  despacio sobre negro, una detrás de otra, y al terminar aparece la pantalla de
+  agradecimiento. Es lo último que ve, después de abrir todas las cartas.
+  <br><br>
+  <b>Consejo:</b> pide frases <b>cortas</b> (una línea, como mucho dos). Cuanto más
+  concretas, más golpean: “de la ansiedad de las 3 de la mañana” funciona mejor que
+  “de todo”.</div>
+  <div class="note warn" id="vcEstado"></div>
+  <div class="card">
+    <h3>La pregunta</h3>
+    <p class="sub">Se ve arriba, fija, mientras pasan las frases.</p>
+    <label class="f"><span>Pregunta</span><input data-c="pregunta" placeholder="¿de qué te salvó un live de Mariposa?"/>
+      <p class="hint">Vacío = “¿de qué te salvó un live de Mariposa?”, traducida sola.</p></label>
+  </div>
+  <div class="card">
+    <h3>Las frases</h3>
+    <p class="sub">En el orden en el que quieres que pasen.</p>
+    <div id="voces"></div>
+    <div class="row"><button class="btn p" id="addVoz">+ Añadir frase</button>
+      <button class="btn" id="addVozDemo">✨ Ver un ejemplo</button></div>
+  </div>
+</section>
+
+<!-- ============ MUSICA ============ -->
+<section class="panel" id="p-musica" hidden>
+  <div class="note"><b>Recomendado para Corea:</b> pon tus propios <code>.mp3</code> en la carpeta
+  <code>audios/</code>. Suenan siempre y al instante. La playlist de YouTube funciona, pero depende de YouTube.</div>
+  <div class="card">
+    <h3>Ajustes</h3>
+    <div class="g g2">
+      <label class="f"><span>Volumen al empezar</span><input data-m="volumen" type="number" min="0" max="100"/></label>
+      <label class="f"><span>¿Empieza sola?</span>
+        <select data-m="autoplay"><option value="1">Sí</option><option value="0">No</option></select></label>
+      <label class="f" style="grid-column:1/-1"><span>ID de playlist de YouTube</span>
+        <input data-m="playlist" placeholder="PLxxxxxxxxxxxx"/>
+        <p class="hint">De <code>youtube.com/playlist?list=<b>PLxxx</b></code> copia solo la parte <b>PLxxx</b>.</p></label>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Tus pistas propias</h3>
+    <p class="sub">Si pones aunque sea una, el sitio usa estas y no YouTube.</p>
+    <div id="pistas"></div>
+    <button class="btn p" id="addPista">+ Añadir pista</button>
+  </div>
+</section>
+
+<!-- ============ FINAL ============ -->
+<section class="panel" id="p-sala" hidden>
+  <div class="note"><b>Estos videos van aparte de las cartas.</b> No salen en el Mapa, ni en el Índice, ni en el Mural: viven en su propio botón del menú y <b>ninguno se reproduce solo</b>. Ella entra cuando quiere, ve de quién es cada uno y toca el que le apetezca. Pensado para que pueda decidir en directo qué enseña y qué no.</div>
+
+  <div class="card">
+    <h3>El nombre del botón</h3>
+    <p class="sub">Cómo se va a llamar este apartado en el menú de abajo. Puede ser el nombre del grupo, o algo más general como «Amigos». Si dejas los de coreano e inglés vacíos, se usa el primero para todos.</p>
+    <div class="g g3">
+      <label class="f"><span>Nombre</span><input data-sa="nombre" placeholder="Amigos"/></label>
+      <label class="f"><span>En coreano</span><input data-sa="nombreKo" placeholder="친구들"/></label>
+      <label class="f"><span>En inglés</span><input data-sa="nombreEn" placeholder="Friends"/></label>
+    </div>
+    <label class="f"><span>Una línea de presentación (opcional)</span><input data-sa="intro" placeholder="Se juntaron para grabarte esto"/></label>
+  </div>
+
+  <div class="card">
+    <h3>Los videos</h3>
+    <p class="sub">Pega el enlace de YouTube, o la ruta de un archivo que hayas puesto en la carpeta <code>videos/</code>. Con YouTube la miniatura se saca sola y la calidad se ajusta a la conexión de ella; es lo más seguro si son muchos.</p>
+    <div id="salaVids"></div>
+    <button class="btn p" id="addSalaVid">+ Añadir un video</button>
+  </div>
+
+  <div class="card">
+    <h3>Si usas archivos en vez de YouTube</h3>
+    <p class="sub">Mételos en la carpeta <code>videos/</code> y escribe aquí la ruta, por ejemplo <code>videos/banda.mp4</code>.</p>
+    <ul class="sub" style="margin:6px 0 0 16px;line-height:1.7">
+      <li>Formato <b>MP4 · H.264 · AAC</b>. Que no sea HEVC/H.265 (el «Alta eficiencia» del iPhone): no se ve en todos los navegadores.</li>
+      <li>Que cada uno pese <b>menos de 3 MB por cada 30 segundos</b>. Si pesa el doble, se ve a tirones con mala conexión.</li>
+      <li>La miniatura no se saca sola: ponle una imagen en el campo «Portada» o saldrá un cuadro con el triángulo de play.</li>
+    </ul>
+  </div>
+</section>
+<section class="panel" id="p-final" hidden>
+  <div class="note">Lo que lee cuando ya abrió todas las cartas. Si lo dejas vacío se usa el mensaje bonito por defecto.</div>
+  <div class="card">
+    <h3>Mensaje final</h3>
+    <div class="g">
+      <label class="f"><span>Título</span><input data-f="titulo"/></label>
+      <label class="f"><span>Mensaje</span><textarea data-f="mensaje" style="min-height:130px"></textarea></label>
+      <label class="f"><span>Firma</span><input data-f="firma"/></label>
+    </div>
+  </div>
+  <div class="card">
+    <h3>La última pantalla</h3>
+    <p class="sub">Las dos frases sobre negro que salen justo después del muro de voces.
+    Déjalas vacías y se usan las de siempre, traducidas a los 3 idiomas.</p>
+    <div class="g g2">
+      <label class="f"><span>Primera frase</span><input data-f="gracias1" placeholder="Nos distraes de lo malo."/></label>
+      <label class="f"><span>Segunda frase</span><input data-f="gracias2" placeholder="Hoy nos toca a nosotros."/></label>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AYUDA ============ -->
+<section class="panel" id="p-ayuda" hidden>
+  <div class="card">
+    <h3>Cómo se usa esto</h3>
+    <p class="sub">Tres pasos y ya.</p>
+    <details open><summary>1. Rellena lo que tengas</summary>
+      <p>Ve por las pestañas de arriba. No hace falta llenarlo todo de una vez: se guarda solo en este navegador.</p></details>
+    <details><summary>2. Descarga el archivo</summary>
+      <p>Abajo, botón <b>Descargar datos.js</b>. Se descarga un archivo llamado <code>datos.js</code>.</p></details>
+    <details><summary>3. Súbelo a Netlify</summary>
+      <p>Mete ese <code>datos.js</code> en la carpeta del sitio (reemplazando el que hay) y vuelve a subir la carpeta
+      a Netlify arrastrándola. Listo: los cambios ya están.</p></details>
+  </div>
+  <div class="card">
+    <h3>Las fotos de las cartas</h3>
+    <details open><summary>Lo más rápido (recomendado)</summary>
+      <p>Guarda las fotos dentro de la carpeta <code>images/</code> y escribe en la carta:
+      <code>images/carta-de-gabby.jpg</code>. Así abren al instante y funcionan en Corea sin depender de nadie.</p></details>
+    <details><summary>Con Google Drive</summary>
+      <p>Abre la <b>foto</b> (no la carpeta), pulsa <b>Compartir → Cualquier persona con el enlace</b>,
+      copia el enlace y pégalo. Si compartes la carpeta en vez de la foto, no se verá.</p></details>
+  </div>
+  
+  <div class="card">
+    <h3>Notas de voz</h3>
+    <details><summary>¿Se pueden añadir?</summary>
+      <p>Sí. Guarda el audio en <code>audios/</code> y ponlo en el campo <b>Nota de voz</b> de la carta:
+      <code>audios/gabby.m4a</code>. Aparece un reproductor debajo de la carta, con su propio
+      control de volumen (se puede subir hasta el 300% si la nota se grabó muy bajito).
+      La nota suena sola al abrir la carta y la playlist se pausa mientras dura.</p></details>
+      <details><summary>¿Y si además mandaron un video?</summary>
+      <p>Guarda el <code>.mp4</code> en <code>videos/</code> y ponlo en el campo <b>Video</b> de la carta:
+      <code>videos/gabby.mp4</code>.</p>
+      <ul>
+        <li><b>Carta + video + nota de voz:</b> se ven los tres. Arriba salen las pestañas
+            <b>Carta</b> y <b>Video</b>, y la nota de voz suena sola abajo.</li>
+        <li><b>Solo video:</b> ocupa toda la carta, sin pestañas.</li>
+        <li><b>Solo carta y nota de voz:</b> como siempre, sin rastro del video.</li>
+      </ul>
+      <p>El video no se descarga hasta que se toca la pestaña, así la carta abre ligera.</p></details>
+  </div>
+</section>
+
+</div>
+
+<div class="bar"><div class="in">
+  <span id="status" style="font-size:.8rem;color:var(--t3)">Se guarda solo mientras escribes</span>
+  <span class="grow"></span>
+  <button class="btn" id="bPreview">👁 Ver cómo queda</button>
+  <button class="btn p" id="bSave">⬇ Descargar datos.js</button>
+</div></div>
+<div id="toast"></div>
+<script src="datos.js" onerror="void 0"></script>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)},
+    $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
+
+/* ---------------- datos ---------------- */
+var D = null;
+function vacio(){
+  return {
+    config:{nombre:"Lee Eunji",nombreKo:"이은지",alias:"MARIPOSA",aliasKo:"마리포사",oficio:"DJ",
+      cumple:"2026-09-09",zonaHoraria:"Asia/Seoul",idioma:"auto",clave:"",pista:"",
+      horaLive:"22:00",pregunta:"",
+      firma:"de tus mariposas, desde todo el mundo"},
+    textos:{acto1Kicker:"",acto1Titulo:"",acto1Sub:"",acto2:"",
+      acto3Titulo:"",acto3Nombre:"",acto3Boton:"",acto5Titulo:"",acto5Mensaje:""},
+    chat:[],
+    paises:[], voces:[], musica:{volumen:65,autoplay:true,playlist:"",pistas:[]},
+    sala:{nombre:"Videos",nombreKo:"영상",nombreEn:"Videos",intro:"",videos:[]},
+    final:{titulo:"",mensaje:"",firma:""}
+  };
+}
+function fusionar(base, x){
+  x = x || {};
+  base.config  = Object.assign(base.config, x.config||{});
+  ['t'+'iktok','rewind'].forEach(function(k){ delete base.config[k]; delete base[k]; });
+  base.textos  = Object.assign(base.textos, x.textos||{});
+  base.chat    = x.chat || [];
+  /* si viene un datos.js de la version anterior, las cartas pueden estar en
+     "cartas" (lista plana) o en "paises" (agrupadas). Se aceptan las dos y se
+     guardan siempre agrupadas, que es como las pinta este editor. */
+  base.paises  = x.paises ? x.paises.slice() : [];
+  if (x.cartas && x.cartas.length){
+    var porIso = {};
+    base.paises.forEach(function(p){ porIso[String(p.iso||'').toLowerCase()] = p; });
+    x.cartas.forEach(function(c){
+      if (!c) return;
+      var iso = String(c.pais||c.iso||'').toLowerCase(); if (!iso) return;
+      if (!porIso[iso]){ porIso[iso] = {iso:iso, cartas:[]}; base.paises.push(porIso[iso]); }
+      porIso[iso].cartas.push({nombre:c.nombre||"",ciudad:c.ciudad||"",foto:c.foto||"",
+                               video:c.video||"",
+                               texto:c.texto||"",textoKo:c.textoKo||"",audio:c.audio||"",
+                               id:c.id||""});
+    });
+  }
+  base.voces   = x.voces || [];
+  base.musica  = Object.assign(base.musica, x.musica||{});
+  base.musica.pistas = (x.musica&&x.musica.pistas)||[];
+  base.final   = Object.assign(base.final, x.final||{});
+  base.sala    = Object.assign(base.sala, x.sala||{});
+  base.sala.videos = (x.sala && x.sala.videos) || [];
+  return base;
+}
+
+/* ---------------- cifrado (igual que el sitio) ---------------- */
+var KEY = [109,65,82,105,80,111,83,97,48,57,48,57,167,92,30,179,119,44,213,145,74,238,56,96,15,196,139,19,253,38,153,126];
+function b64ToBytes(b){ var s=atob(b),n=s.length,u=new Uint8Array(n),i;
+  for(i=0;i<n;i++)u[i]=s.charCodeAt(i)^KEY[i%KEY.length]; return u; }
+function bytesToB64(u){ var s='',i,c=8192;
+  for(i=0;i<u.length;i+=c) s+=String.fromCharCode.apply(null,u.subarray(i,i+c));
+  return btoa(s); }
+function xorOut(u){ var o=new Uint8Array(u.length),i;
+  for(i=0;i<u.length;i++)o[i]=u[i]^KEY[i%KEY.length]; return o; }
+
+/* deflate "stored" — valido siempre, sin dependencias */
+function deflateStored(u){
+  var out=[],i=0,n=u.length;
+  if(!n){ out.push(1,0,0,255,255); return new Uint8Array(out); }
+  while(i<n){
+    var len=Math.min(65535,n-i), last=(i+len>=n)?1:0;
+    out.push(last, len&255, (len>>8)&255, (~len)&255, ((~len)>>8)&255);
+    for(var k=0;k<len;k++) out.push(u[i+k]);
+    i+=len;
+  }
+  return new Uint8Array(out);
+}
+async function comprimir(u){
+  if (typeof CompressionStream !== 'undefined'){
+    try{
+      var cs=new CompressionStream('deflate-raw');
+      var r=new Response(new Blob([u]).stream().pipeThrough(cs));
+      return new Uint8Array(await r.arrayBuffer());
+    }catch(e){}
+  }
+  return deflateStored(u);
+}
+/* inflate: copiado del sitio */
+function inflateRaw(data){
+  var pos=0,bitbuf=0,bitcnt=0,out=new Uint8Array(1<<16),olen=0;
+  function grow(n){ if(olen+n>out.length){ var s=out.length; while(s<olen+n)s*=2; var nb=new Uint8Array(s); nb.set(out); out=nb; } }
+  function bits(n){ while(bitcnt<n){ bitbuf|=data[pos++]<<bitcnt; bitcnt+=8; } var v=bitbuf&((1<<n)-1); bitbuf>>>=n; bitcnt-=n; return v; }
+  function tree(L,n){
+    var i,max=0; for(i=0;i<n;i++) if(L[i]>max)max=L[i];
+    var c=new Int32Array(max+1); for(i=0;i<n;i++) c[L[i]]++; c[0]=0;
+    var o=new Int32Array(max+2),s=0; for(i=1;i<=max;i++){o[i]=s;s+=c[i];}
+    var y=new Int32Array(s); for(i=0;i<n;i++) if(L[i]) y[o[L[i]]++]=i;
+    return {c:c,s:y,m:max};
+  }
+  function dec(t){
+    var code=0,first=0,index=0,len,cnt;
+    for(len=1;len<=t.m;len++){
+      code|=bits(1); cnt=t.c[len];
+      if(code-first<cnt) return t.s[index+(code-first)];
+      index+=cnt; first=(first+cnt)<<1; code<<=1;
+    }
+    return -1;
+  }
+  var LB=[3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258],
+      LE=[0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0],
+      DB=[1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577],
+      DE=[0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13],
+      OR=[16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15];
+  var fL=null,fD=null,i;
+  function fixed(){
+    if(fL) return;
+    var l=new Int32Array(288);
+    for(i=0;i<144;i++)l[i]=8; for(;i<256;i++)l[i]=9; for(;i<280;i++)l[i]=7; for(;i<288;i++)l[i]=8;
+    fL=tree(l,288);
+    var d=new Int32Array(30); for(i=0;i<30;i++)d[i]=5; fD=tree(d,30);
+  }
+  var last=0;
+  do{
+    last=bits(1); var type=bits(2);
+    if(type===0){
+      bitbuf=0;bitcnt=0;
+      var len=data[pos]|(data[pos+1]<<8); pos+=4;
+      grow(len); out.set(data.subarray(pos,pos+len),olen); olen+=len; pos+=len;
+    } else {
+      var lt,dt;
+      if(type===1){ fixed(); lt=fL; dt=fD; }
+      else {
+        var hl=bits(5)+257,hd=bits(5)+1,hc=bits(4)+4;
+        var cl=new Int32Array(19);
+        for(i=0;i<hc;i++) cl[OR[i]]=bits(3);
+        var ct=tree(cl,19);
+        var ln=new Int32Array(hl+hd),k=0;
+        while(k<hl+hd){
+          var sy=dec(ct);
+          if(sy<16) ln[k++]=sy;
+          else if(sy===16){ var pv=ln[k-1],r=3+bits(2); while(r--)ln[k++]=pv; }
+          else if(sy===17){ var r2=3+bits(3); while(r2--)ln[k++]=0; }
+          else { var r3=11+bits(7); while(r3--)ln[k++]=0; }
+        }
+        lt=tree(ln.subarray(0,hl),hl);
+        dt=tree(ln.subarray(hl),hd);
+      }
+      for(;;){
+        var s2=dec(lt);
+        if(s2<256){ grow(1); out[olen++]=s2; }
+        else if(s2===256) break;
+        else {
+          s2-=257; var L2=LB[s2]+bits(LE[s2]);
+          var ds=dec(dt); var D2=DB[ds]+bits(DE[ds]);
+          grow(L2); var fr=olen-D2;
+          for(var q=0;q<L2;q++) out[olen++]=out[fr+q];
+        }
+      }
+    }
+  } while(!last);
+  return out.subarray(0,olen);
+}
+
+function descifrar(b64){
+  var d = b64ToBytes(b64);
+  var raw = inflateRaw(d);
+  return new TextDecoder().decode(raw);
+}
+async function cifrar(txt){
+  var u = new TextEncoder().encode(txt);
+  var z = await comprimir(u);
+  return bytesToB64(xorOut(z));
+}
+
+/* ---------------- paises ---------------- */
+var GEO = {
+ mx:{es:"México",ko:"멕시코",en:"Mexico",la:19.4,lo:-99.1},
+ us:{es:"Estados Unidos",ko:"미국",en:"United States",la:38.9,lo:-77.0},
+ ca:{es:"Canadá",ko:"캐나다",en:"Canada",la:45.4,lo:-75.7},
+ gt:{es:"Guatemala",ko:"과테말라",en:"Guatemala",la:14.6,lo:-90.5},
+ sv:{es:"El Salvador",ko:"엘살바도르",en:"El Salvador",la:13.7,lo:-89.2},
+ hn:{es:"Honduras",ko:"온두라스",en:"Honduras",la:14.1,lo:-87.2},
+ ni:{es:"Nicaragua",ko:"니카라과",en:"Nicaragua",la:12.1,lo:-86.3},
+ cr:{es:"Costa Rica",ko:"코스타리카",en:"Costa Rica",la:9.9,lo:-84.1},
+ pa:{es:"Panamá",ko:"파나마",en:"Panama",la:8.98,lo:-79.5},
+ cu:{es:"Cuba",ko:"쿠바",en:"Cuba",la:23.1,lo:-82.4},
+ do:{es:"Rep. Dominicana",ko:"도미니카 공화국",en:"Dominican Rep.",la:18.5,lo:-69.9},
+ pr:{es:"Puerto Rico",ko:"푸에르토리코",en:"Puerto Rico",la:18.4,lo:-66.1},
+ co:{es:"Colombia",ko:"콜롬비아",en:"Colombia",la:4.7,lo:-74.1},
+ ve:{es:"Venezuela",ko:"베네수엘라",en:"Venezuela",la:10.5,lo:-66.9},
+ ec:{es:"Ecuador",ko:"에콰도르",en:"Ecuador",la:-0.2,lo:-78.5},
+ pe:{es:"Perú",ko:"페루",en:"Peru",la:-12.0,lo:-77.0},
+ bo:{es:"Bolivia",ko:"볼리비아",en:"Bolivia",la:-16.5,lo:-68.1},
+ br:{es:"Brasil",ko:"브라질",en:"Brazil",la:-15.8,lo:-47.9},
+ py:{es:"Paraguay",ko:"파라과이",en:"Paraguay",la:-25.3,lo:-57.6},
+ uy:{es:"Uruguay",ko:"우루과이",en:"Uruguay",la:-34.9,lo:-56.2},
+ ar:{es:"Argentina",ko:"아르헨티나",en:"Argentina",la:-34.6,lo:-58.4},
+ cl:{es:"Chile",ko:"칠레",en:"Chile",la:-33.4,lo:-70.7},
+ gb:{es:"Reino Unido",ko:"영국",en:"United Kingdom",la:51.5,lo:-0.13},
+ ie:{es:"Irlanda",ko:"아일랜드",en:"Ireland",la:53.3,lo:-6.26},
+ pt:{es:"Portugal",ko:"포르투갈",en:"Portugal",la:38.7,lo:-9.14},
+ es:{es:"España",ko:"스페인",en:"Spain",la:40.4,lo:-3.7},
+ fr:{es:"Francia",ko:"프랑스",en:"France",la:48.86,lo:2.35},
+ be:{es:"Bélgica",ko:"벨기에",en:"Belgium",la:50.85,lo:4.35},
+ nl:{es:"Países Bajos",ko:"네덜란드",en:"Netherlands",la:52.37,lo:4.9},
+ de:{es:"Alemania",ko:"독일",en:"Germany",la:52.52,lo:13.4},
+ ch:{es:"Suiza",ko:"스위스",en:"Switzerland",la:46.95,lo:7.45},
+ at:{es:"Austria",ko:"오스트리아",en:"Austria",la:48.2,lo:16.37},
+ it:{es:"Italia",ko:"이탈리아",en:"Italy",la:41.9,lo:12.5},
+ gr:{es:"Grecia",ko:"그리스",en:"Greece",la:37.98,lo:23.73},
+ pl:{es:"Polonia",ko:"폴란드",en:"Poland",la:52.23,lo:21.01},
+ ro:{es:"Rumanía",ko:"루마니아",en:"Romania",la:44.43,lo:26.1},
+ se:{es:"Suecia",ko:"스웨덴",en:"Sweden",la:59.33,lo:18.07},
+ no:{es:"Noruega",ko:"노르웨이",en:"Norway",la:59.91,lo:10.75},
+ fi:{es:"Finlandia",ko:"핀란드",en:"Finland",la:60.17,lo:24.94},
+ dk:{es:"Dinamarca",ko:"덴마크",en:"Denmark",la:55.68,lo:12.57},
+ ru:{es:"Rusia",ko:"러시아",en:"Russia",la:55.75,lo:37.62},
+ tr:{es:"Turquía",ko:"튀르키예",en:"Türkiye",la:39.93,lo:32.86},
+ eg:{es:"Egipto",ko:"이집트",en:"Egypt",la:30.04,lo:31.24},
+ ma:{es:"Marruecos",ko:"모로코",en:"Morocco",la:34.02,lo:-6.84},
+ za:{es:"Sudáfrica",ko:"남아프리카",en:"South Africa",la:-25.75,lo:28.19},
+ in:{es:"India",ko:"인도",en:"India",la:28.61,lo:77.21},
+ cn:{es:"China",ko:"중국",en:"China",la:39.9,lo:116.4},
+ kr:{es:"Corea del Sur",ko:"대한민국",en:"South Korea",la:37.57,lo:126.98},
+ jp:{es:"Japón",ko:"일본",en:"Japan",la:35.68,lo:139.69},
+ tw:{es:"Taiwán",ko:"대만",en:"Taiwan",la:25.03,lo:121.57},
+ vn:{es:"Vietnam",ko:"베트남",en:"Vietnam",la:21.03,lo:105.85},
+ th:{es:"Tailandia",ko:"태국",en:"Thailand",la:13.76,lo:100.5},
+ ph:{es:"Filipinas",ko:"필리핀",en:"Philippines",la:14.6,lo:120.98},
+ id:{es:"Indonesia",ko:"인도네시아",en:"Indonesia",la:-6.2,lo:106.85},
+ au:{es:"Australia",ko:"호주",en:"Australia",la:-35.28,lo:149.13},
+ nz:{es:"Nueva Zelanda",ko:"뉴질랜드",en:"New Zealand",la:-41.29,lo:174.78}
+};
+/* ============================================================ BANDERAS
+   Dibujadas en linea: cero peticiones externas, abren al instante
+   en cualquier pais (incluida Corea del Sur) y pesan casi nada.
+   ============================================================ */
+var FLAGW = 60, FLAGH = 40;
+function _star(cx,cy,r,fill,rot){
+  var p='',i,a,rr;
+  for(i=0;i<10;i++){ a=(rot||-90)*Math.PI/180 + i*Math.PI/5; rr=(i%2?r*.382:r);
+    p += (i?'L':'M') + (cx+Math.cos(a)*rr).toFixed(2) + ',' + (cy+Math.sin(a)*rr).toFixed(2); }
+  return '<path d="'+p+'Z" fill="'+fill+'"/>';
+}
+function _stars(list,r,fill){ return list.map(function(p){ return _star(p[0],p[1],r,fill); }).join(''); }
+function _c(cx,cy,r,f){ return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+f+'"/>'; }
+function _r(x,y,w,h,f){ return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+f+'"/>'; }
+function _nordic(f,off){ off=off||0; return _r(17+off,0,7,40,f)+_r(0,16.5,60,7,f); }
+var UNION = _r(0,0,60,40,'#012169')
+  + '<path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/>'
+  + '<path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="4"/>'
+  + '<path d="M30,0 L30,40 M0,20 L60,20" stroke="#fff" stroke-width="13"/>'
+  + '<path d="M30,0 L30,40 M0,20 L60,20" stroke="#C8102E" stroke-width="8"/>';
+var UNION_S = '<g transform="scale(.5)">'+UNION+'</g>';
+
+var FLAGS = {
+ mx:{v:['#006847','#fff','#CE1126'], o:_c(30,20,4.6,'#8A6A2F')+_c(30,20,3,'#0E7A3C')},
+ us:{o:(function(){var s='',i;for(i=0;i<13;i++)s+=_r(0,i*40/13,60,40/13,i%2?'#fff':'#B22234');
+      s+=_r(0,0,26,21.5,'#3C3B6E');var p=[],r,c;for(r=0;r<5;r++)for(c=0;c<5;c++)p.push([3.4+c*4.8,2.6+r*4.2]);
+      return s+_stars(p,1.5,'#fff');})()},
+ ca:{v:['#D80621','#fff','#D80621'], w:[1,2,1], o:'<path d="M30,9 l2,5 4,-2 -1.4,5 5.4,-.8 -1.6,3 5,3.4 -2,1.2 .8,3-5.4-1 .4,6.6h-4l.4-6.6-5.4,1 .8-3-2-1.2 5-3.4-1.6-3 5.4.8-1.4-5 4,2z" fill="#D80621"/>'},
+ gt:{v:['#4997D0','#fff','#4997D0'], o:_c(30,20,4,'#6B8E23')},
+ sv:{h:['#0F47AF','#fff','#0F47AF'], o:_c(30,20,4,'#F0C419')},
+ hn:{h:['#0073CF','#fff','#0073CF'], o:_stars([[30,20],[24,16],[36,16],[24,24],[36,24]],1.6,'#0073CF')},
+ ni:{h:['#0067C6','#fff','#0067C6'], o:_c(30,20,4,'#C8E4F5')+_c(30,20,2.4,'#F0C419')},
+ cr:{h:['#002B7F','#fff','#CE1126','#fff','#002B7F'], w:[1,1,2,1,1]},
+ pa:{o:_r(0,0,30,20,'#fff')+_r(30,0,30,20,'#DA121A')+_r(0,20,30,20,'#072357')+_r(30,20,30,20,'#fff')
+     +_star(15,10,5.4,'#072357')+_star(45,30,5.4,'#DA121A')},
+ cu:{o:(function(){var s='',i;for(i=0;i<5;i++)s+=_r(0,i*8,60,8,i%2?'#fff':'#002A8F');
+      return s+'<path d="M0,0 L26,20 L0,40Z" fill="#CF142B"/>'+_star(9,20,5.2,'#fff');})()},
+ do:{o:_r(0,0,60,40,'#002D62')+_r(30,0,30,20,'#CE1126')+_r(0,20,30,20,'#CE1126')
+     +_r(25,0,10,40,'#fff')+_r(0,15,60,10,'#fff')+_c(30,20,3.4,'#0E7A3C')},
+ pr:{o:(function(){var s='',i;for(i=0;i<5;i++)s+=_r(0,i*8,60,8,i%2?'#fff':'#ED0000');
+      return s+'<path d="M0,0 L28,20 L0,40Z" fill="#0050F0"/>'+_star(9.5,20,5.2,'#fff');})()},
+ co:{h:['#FCD116','#003893','#CE1126'], w:[2,1,1]},
+ ve:{h:['#FFCC00','#00247D','#CF142B'], o:_stars([[22,20],[26,17.6],[30,16.8],[34,17.6],[38,20]],1.5,'#fff')},
+ ec:{h:['#FFDD00','#0033A0','#CE1126'], w:[2,1,1], o:_c(30,20,4.2,'#FFDD00')+_c(30,20,2.6,'#0033A0')},
+ pe:{v:['#D91023','#fff','#D91023'], o:_c(30,20,3.6,'#D91023')},
+ bo:{h:['#D52B1E','#F9E300','#007934']},
+ br:{o:_r(0,0,60,40,'#009B3A')+'<path d="M30,4 L56,20 L30,36 L4,20Z" fill="#FEDF00"/>'+_c(30,20,9,'#002776')
+     +'<path d="M21,17 Q30,25 39,17" stroke="#fff" stroke-width="3" fill="none"/>'
+     +_stars([[27,16],[32,18],[36,15],[24,22],[33,23]],.9,'#fff')},
+ py:{h:['#D52B1E','#fff','#0038A8'], o:_c(30,20,3.4,'#fff')+_c(30,20,2.6,'#0038A8')+_star(30,20,1.8,'#FFDA00')},
+ uy:{o:(function(){var s=_r(0,0,60,40,'#fff'),i;for(i=0;i<4;i++)s+=_r(24,4.44+i*8.88,36,4.44,'#0038A8');
+      return s+_r(0,0,24,20,'#fff')+_c(12,10,5.4,'#FCD116')+_star(12,10,7.4,'#FCD116',-90);})()},
+ ar:{h:['#74ACDF','#fff','#74ACDF'], o:_c(30,20,4,'#FCBF49')+_star(30,20,5.6,'#FCBF49')},
+ cl:{o:_r(0,0,60,20,'#fff')+_r(0,20,60,20,'#D52B1E')+_r(0,0,20,20,'#0039A6')+_star(10,10,5.6,'#fff')},
+ gb:{o:UNION},
+ ie:{v:['#169B62','#fff','#FF883E']},
+ pt:{o:_r(0,0,24,40,'#046A38')+_r(24,0,36,40,'#DA291C')+_c(24,20,6.4,'#FFE900')+_c(24,20,4.4,'#fff')+_c(24,20,3,'#DA291C')},
+ es:{h:['#AA151B','#F1BF00','#AA151B'], w:[1,2,1], o:_r(14,15,7,10,'#AD1519')+_r(15,16,5,8,'#FFC400')},
+ fr:{v:['#002395','#fff','#ED2939']},
+ be:{v:['#000','#FAE042','#ED2939']},
+ nl:{h:['#AE1C28','#fff','#21468B']},
+ de:{h:['#000','#DD0000','#FFCE00']},
+ ch:{o:_r(0,0,60,40,'#D52B1E')+_r(25,9,10,22,'#fff')+_r(19,15,22,10,'#fff')},
+ at:{h:['#ED2939','#fff','#ED2939']},
+ it:{v:['#008C45','#F4F5F0','#CD212A']},
+ gr:{o:(function(){var s='',i;for(i=0;i<9;i++)s+=_r(0,i*40/9,60,40/9,i%2?'#fff':'#0D5EAF');
+      return s+_r(0,0,22,22,'#0D5EAF')+_r(9,0,4,22,'#fff')+_r(0,9,22,4,'#fff');})()},
+ pl:{h:['#fff','#DC143C']},
+ ro:{v:['#002B7F','#FCD116','#CE1126']},
+ se:{o:_r(0,0,60,40,'#006AA7')+_nordic('#FECC00',-3)},
+ no:{o:_r(0,0,60,40,'#BA0C2F')+_nordic('#fff',-3)+'<g>'+_r(19,0,3,40,'#00205B')+_r(0,18.5,60,3,'#00205B')+'</g>'},
+ fi:{o:_r(0,0,60,40,'#fff')+_nordic('#003580',-3)},
+ dk:{o:_r(0,0,60,40,'#C60C30')+_nordic('#fff',-3)},
+ ru:{h:['#fff','#0039A6','#D52B1E']},
+ tr:{o:_r(0,0,60,40,'#E30A17')+_c(24,20,8,'#fff')+_c(27,20,6.4,'#E30A17')+_star(36,20,3.6,'#fff')},
+ ma:{o:_r(0,0,60,40,'#C1272D')+'<path d="'+(function(){var p='',i,a,rr;for(i=0;i<10;i++){a=-Math.PI/2+i*Math.PI/5;rr=(i%2?4:10);p+=(i?'L':'M')+(30+Math.cos(a)*rr).toFixed(2)+','+(20+Math.sin(a)*rr).toFixed(2);}return p+'Z';})()+'" fill="none" stroke="#006233" stroke-width="1.8"/>'},
+ eg:{h:['#CE1126','#fff','#000'], o:'<path d="M27,17 h6 v4 h-6z" fill="#C09300"/>'},
+ za:{o:_r(0,0,60,40,'#fff')+_r(0,0,60,13,'#E03C31')+_r(0,27,60,13,'#002395')
+     +'<path d="M0,0 L22,20 L0,40Z" fill="#007A4D"/><path d="M0,6 L14,20 L0,34Z" fill="#FFB612"/><path d="M0,11 L9,20 L0,29Z" fill="#000"/>'
+     +'<path d="M8,20 L60,20" stroke="#007A4D" stroke-width="7" fill="none"/>'},
+ in:{h:['#FF9933','#fff','#138808'], o:_c(30,20,4.4,'#fff')+'<circle cx="30" cy="20" r="4.2" fill="none" stroke="#000080" stroke-width="1"/>'+_c(30,20,1,'#000080')},
+ cn:{o:_r(0,0,60,40,'#DE2910')+_star(11,10,5.4,'#FFDE00')+_stars([[20,4.6],[24,8],[24,13],[20,16.4]],1.7,'#FFDE00')},
+ kr:{o:_r(0,0,60,40,'#fff')
+   +'<path d="M30,20 m-8,0 a8,8 0 0,1 16,0 a4,4 0 0,1 -8,0 a4,4 0 0,0 -8,0" fill="#CD2E3A"/>'
+   +'<path d="M30,20 m-8,0 a4,4 0 0,1 8,0 a4,4 0 0,0 8,0 a8,8 0 0,1 -16,0" fill="#0047A0"/>'
+   +'<g fill="#000"><rect x="8" y="7" width="9" height="1.3" transform="rotate(56 12.5 7.6)"/>'
+   +'<rect x="8" y="10" width="9" height="1.3" transform="rotate(56 12.5 10.6)"/>'
+   +'<rect x="8" y="13" width="9" height="1.3" transform="rotate(56 12.5 13.6)"/>'
+   +'<rect x="43" y="27" width="9" height="1.3" transform="rotate(56 47.5 27.6)"/>'
+   +'<rect x="43" y="30" width="9" height="1.3" transform="rotate(56 47.5 30.6)"/>'
+   +'<rect x="43" y="33" width="9" height="1.3" transform="rotate(56 47.5 33.6)"/></g>'},
+ jp:{o:_r(0,0,60,40,'#fff')+_c(30,20,10,'#BC002D')},
+ tw:{o:_r(0,0,60,40,'#FE0000')+_r(0,0,30,20,'#000095')+_c(15,10,5.6,'#fff')+_star(15,10,7.4,'#fff',-90)},
+ vn:{o:_r(0,0,60,40,'#DA251D')+_star(30,20,8.4,'#FFFF00')},
+ th:{h:['#A51931','#F4F5F8','#2D2A4A','#F4F5F8','#A51931'], w:[1,1,2,1,1]},
+ ph:{o:_r(0,0,60,20,'#0038A8')+_r(0,20,60,20,'#CE1126')+'<path d="M0,0 L26,20 L0,40Z" fill="#fff"/>'
+     +_c(9,20,3.2,'#FCD116')+_stars([[3,5],[3,35],[17,20]],1.6,'#FCD116')},
+ id:{h:['#CE1126','#fff']},
+ au:{o:_r(0,0,60,40,'#012169')+UNION_S+_star(45,12,3.4,'#fff')+_star(50,22,2.6,'#fff')+_star(41,26,2.4,'#fff')+_star(47,33,2.4,'#fff')+_star(15,30,3.6,'#fff')},
+ nz:{o:_r(0,0,60,40,'#012169')+UNION_S+_star(48,12,2.8,'#CC142B')+_star(52,22,2.4,'#CC142B')+_star(43,24,2.2,'#CC142B')+_star(49,32,2.2,'#CC142B')},
+ kp:{h:['#024FA2','#fff','#ED1C27','#fff','#024FA2'], w:[1,.4,3,.4,1]}
+};
+var _fcache = {};
+function flagSVG(iso){
+  iso = String(iso||'').toLowerCase();
+  if (_fcache[iso]) return _fcache[iso];
+  var f = FLAGS[iso], inner = '';
+  if (!f){
+    inner = '<defs><linearGradient id="fg'+iso+'" x1="0" y1="0" x2="1" y2="1">'
+      + '<stop offset="0%" stop-color="#4C8DFF"/><stop offset="100%" stop-color="#9B6BFF"/></linearGradient></defs>'
+      + _r(0,0,60,40,'url(#fg'+iso+')')
+      + '<text x="30" y="26" text-anchor="middle" font-size="16" font-family="sans-serif" fill="#fff" opacity=".92">'
+      + esc(iso.toUpperCase()) + '</text>';
+  } else if (f.o && !f.h && !f.v){
+    inner = f.o;
+  } else {
+    var cols = f.h || f.v, wts = f.w || cols.map(function(){return 1;});
+    var tot = wts.reduce(function(a,b){return a+b;},0), pos = 0, i;
+    for (i=0;i<cols.length;i++){
+      var sz = (f.v ? FLAGW : FLAGH) * wts[i]/tot;
+      inner += f.v ? _r(pos,0,sz+.4,FLAGH,cols[i]) : _r(0,pos,FLAGW,sz+.4,cols[i]);
+      pos += sz;
+    }
+    if (f.o) inner += f.o;
+  }
+  var svg = '<svg viewBox="0 0 60 40" preserveAspectRatio="none" aria-hidden="true" focusable="false">'+inner+'</svg>';
+  _fcache[iso] = svg;
+  return svg;
+}
+
+/* mariposa reutilizable */
+function bflySVG(op){
+  op = op || {};
+  var g = op.grad || 'irisg', o1 = op.o1==null?.72:op.o1, o2 = op.o2==null?.56:op.o2;
+  return '<svg viewBox="0 0 100 80" aria-hidden="true" focusable="false"'+(op.style?' style="'+op.style+'"':'')+'>'
+   + '<g class="wing l">'
+   + '<path d="M50,32 C40,18 15,10 6,22 C0,30 8,44 24,44 C34,44 44,40 50,32 Z" fill="url(#'+g+')" fill-opacity="'+o1+'"/>'
+   + '<path d="M50,40 C42,44 26,60 16,58 C8,56 8,46 16,42 C26,38 40,36 50,40 Z" fill="url(#'+g+')" fill-opacity="'+o2+'"/></g>'
+   + '<g class="wing r">'
+   + '<path d="M50,32 C60,18 85,10 94,22 C100,30 92,44 76,44 C66,44 56,40 50,32 Z" fill="url(#'+g+')" fill-opacity="'+o1+'"/>'
+   + '<path d="M50,40 C58,44 74,60 84,58 C92,56 92,46 84,42 C74,38 60,36 50,40 Z" fill="url(#'+g+')" fill-opacity="'+o2+'"/></g>'
+   + '<path d="M48,20 Q41,7 34,2" stroke="#8FB4FF" stroke-width="1" fill="none" stroke-linecap="round"/>'
+   + '<path d="M52,20 Q59,7 66,2" stroke="#8FB4FF" stroke-width="1" fill="none" stroke-linecap="round"/>'
+   + '<ellipse cx="50" cy="38" rx="2.5" ry="19" fill="#0A1030" fill-opacity=".9"/></svg>';
+}
+
+function nom(iso){ var g=GEO[iso]; return g?g.es:String(iso).toUpperCase(); }
+
+/* ---------------- avisos ---------------- */
+function toast(t){
+  var b=$('#toast'), d=document.createElement('div'); d.textContent=t; b.appendChild(d);
+  setTimeout(function(){ d.style.transition='.4s'; d.style.opacity=0; setTimeout(function(){d.remove();},420); },2600);
+  while(b.children.length>3) b.firstChild.remove();
+}
+
+/* ---------------- pintar ---------------- */
+function pintarBasicos(){
+  $$('[data-c]').forEach(function(el){ el.value = D.config[el.dataset.c] == null ? '' : D.config[el.dataset.c]; });
+}
+function pintarActos(){
+  $$('[data-t]').forEach(function(el){ el.value = D.textos[el.dataset.t] || ''; });
+  var cp = $('#chatPool');
+  if (cp) cp.value = (D.chat || []).join('\n');
+  if (window.pintarChat) window.pintarChat();
+  var av = $('#actoAviso');
+  if (av){
+    var tot=0, isos={};
+    (D.paises||[]).forEach(function(p){
+      var n=(p.cartas||[]).length;
+      if(n){ tot+=n; isos[String(p.iso||'').toLowerCase()]=1; }
+    });
+    var np = Object.keys(isos).length;
+    av.innerHTML = 'Ahora mismo hay <b>'+tot+'</b> carta'+(tot===1?'':'s')+' en <b>'+np+'</b> país'
+      + (np===1?'':'es') + '. Eso es lo que dirá el mensaje final.';
+  }
+}
+function campo(lbl,val,ph,tag){
+  return '<label class="f"><span>'+esc(lbl)+'</span>'+
+    (tag==='ta' ? '<textarea data-k>'+esc(val||'')+'</textarea>'
+                : '<input data-k value="'+esc(val||'')+'" placeholder="'+esc(ph||'')+'"/>')+'</label>';
+}
+function campoPais(k,lbl,val){
+  var v = String(val||'').toLowerCase();
+  var ops = Object.keys(GEO).sort(function(a,b){ return GEO[a].es.localeCompare(GEO[b].es,'es'); })
+    .map(function(i){ return '<option value="'+i+'"'+(i===v?' selected':'')+'>'+esc(GEO[i].es)+'</option>'; }).join('');
+  return '<label class="f"><span>'+esc(lbl)+'</span><select data-k="'+k+'">'
+    + '<option value=""'+(v?'':' selected')+'>— sin país —</option>' + ops + '</select></label>';
+}
+function campoK(k,lbl,val,ph,tag){
+  return '<label class="f"><span>'+esc(lbl)+'</span>'+
+    (tag==='ta' ? '<textarea data-k="'+k+'">'+esc(val||'')+'</textarea>'
+                : '<input data-k="'+k+'" value="'+esc(val||'')+'" placeholder="'+esc(ph||'')+'"/>')+'</label>';
+}
+function pintarCartas(){
+  var box=$('#paises'); box.innerHTML='';
+  D.paises.forEach(function(p,i){ box.appendChild(filaPais(p,i)); });
+  if (window.pintarPicker) window.pintarPicker();
+  var tot=0, lis=0;
+  D.paises.forEach(function(p){ (p.cartas||[]).forEach(function(c){ tot++; if(c.foto||c.texto) lis++; }); });
+  $('#kpi').innerHTML =
+     '<div><b>'+D.paises.length+'</b><span>Países</span></div>'
+   + '<div><b>'+tot+'</b><span>Cartas</span></div>'
+   + '<div><b>'+lis+'</b><span>Ya llegaron</span></div>'
+   + '<div><b>'+(tot-lis)+'</b><span>En camino</span></div>';
+}
+function filaPais(p,i){
+  var d=document.createElement('div'); d.className='card';
+  var cs=p.cartas||(p.cartas=[]);
+  d.setAttribute('data-pais', p.iso);
+  d.innerHTML='<div class="ih"><span class="flagbox" style="width:44px;height:30px">'+flagSVG(p.iso)+'</span>'
+    + '<b style="font-size:1.05rem">'+esc(nom(p.iso))+'</b>'
+    + '<span class="isochip">'+esc(p.iso.toUpperCase())+'</span>'
+    + '<span class="chip">'+cs.length+' carta'+(cs.length===1?'':'s')+'</span>'
+    + '<span style="flex:1"></span>'
+    + '<button class="btn s" data-mv="-1">↑</button><button class="btn s" data-mv="1">↓</button>'
+    + '<button class="btn s d" data-delp>Quitar país</button></div>'
+    + '<div data-cartas></div>'
+    + '<button class="btn s" data-addc>+ Añadir carta de '+esc(nom(p.iso))+'</button>';
+  var cbox=d.querySelector('[data-cartas]');
+  cs.forEach(function(c,k){ cbox.appendChild(filaCarta(c,k,p)); });
+  d.querySelector('[data-addc]').addEventListener('click', function(){
+    cs.push({nombre:"",ciudad:"",foto:"",video:"",texto:"",textoKo:"",audio:""}); guardar(); pintarCartas(); });
+  d.querySelector('[data-delp]').addEventListener('click', function(){
+    if(!confirm('¿Quitar '+nom(p.iso)+' y sus cartas?')) return;
+    D.paises.splice(i,1); guardar(); pintarCartas(); });
+  d.querySelectorAll('[data-mv]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var j=i+(+b.dataset.mv); if(j<0||j>=D.paises.length) return;
+      var t=D.paises[i]; D.paises[i]=D.paises[j]; D.paises[j]=t; guardar(); pintarCartas(); });
+  });
+  return d;
+}
+function filaCarta(c,k,p){
+  var d=document.createElement('div'); d.className='item';
+  var lista = !!(c.foto||c.texto||c.video);
+  d.innerHTML='<div class="ih"><b>'+esc(c.nombre||'sin nombre todavía')+'</b>'
+    + '<span class="chip '+(lista?'ok':'wait')+'">'+(lista?'lista ✓':'en camino')+'</span>'
+    + '<span style="flex:1"></span><button class="btn s d" data-del>Quitar</button></div>'
+    + '<div class="g g2">'
+    + campoK('nombre','Quién la escribió',c.nombre,'Gabby')
+    + campoK('ciudad','Ciudad (opcional)',c.ciudad,'')
+    + '</div><div class="g" style="margin-top:12px">'
+    + campoK('foto','Foto de la carta',c.foto,'images/carta-de-gabby.jpg')
+    + '<p class="hint" style="margin-top:-6px">Un archivo de <code>images/</code> o un enlace de Google Drive de la <b>foto</b>.</p>'
+    + campoK('texto','…o el texto escrito',c.texto,'','ta')
+    + campoK('textoKo','Traducción al coreano (opcional)',c.textoKo,'','ta')
+    + campoK('audio','Nota de voz (opcional)',c.audio,'audios/gabby.m4a')
+    + campoK('video','Video (opcional)',c.video,'videos/gabby.mp4')
+    + '<p class="hint" style="margin-top:-6px">Un archivo de <code>videos/</code> o un enlace de Google Drive. Si la carta tiene foto y video, aparecen las pestañas <b>Carta</b> y <b>Video</b>.</p>'
+    + '</div>';
+  d.querySelectorAll('[data-k]').forEach(function(el){
+    el.addEventListener('input', function(){ c[el.dataset.k]=el.value; guardar(); });
+    el.addEventListener('change', function(){ pintarCartas(); });
+  });
+  d.querySelector('[data-del]').addEventListener('click', function(){
+    p.cartas.splice(k,1); guardar(); pintarCartas(); });
+  return d;
+}
+
+function pintarMusica(){
+  $$('[data-m]').forEach(function(el){
+    var k=el.dataset.m, v=D.musica[k];
+    el.value = (k==='autoplay') ? (v===false?'0':'1') : (v==null?'':v);
+  });
+  var box=$('#pistas'); box.innerHTML='';
+  (D.musica.pistas||[]).forEach(function(t,i){
+    var d=document.createElement('div'); d.className='item';
+    d.innerHTML='<div class="ih"><b>'+esc(t.titulo||('Pista '+(i+1)))+'</b><span style="flex:1"></span>'
+      +'<button class="btn s d" data-del>Quitar</button></div><div class="g g3">'
+      + campoK('titulo','Título',t.titulo,'Set 0909')
+      + campoK('artista','Artista',t.artista,'Mariposa')
+      + campoK('archivo','Archivo',t.archivo,'audios/set0909.mp3')
+      + '</div>';
+    d.querySelectorAll('[data-k]').forEach(function(el){
+      el.addEventListener('input', function(){ t[el.dataset.k]=el.value; guardar(); }); });
+    d.querySelector('[data-del]').addEventListener('click', function(){
+      D.musica.pistas.splice(i,1); guardar(); pintarMusica(); });
+    box.appendChild(d);
+  });
+}
+/* ---------------- la sala de videos ---------------- */
+function salaEsYT(u){
+  return /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/.exec(String(u||''));
+}
+function pintarSala(){
+  $$('[data-sa]').forEach(function(el){ el.value = D.sala[el.dataset.sa] || ''; });
+  var box=$('#salaVids'); if(!box) return;
+  box.innerHTML='';
+  (D.sala.videos||[]).forEach(function(v,i){
+    var m=salaEsYT(v.url);
+    var etiqueta = m ? 'YouTube' : (v.url ? 'Archivo' : 'sin enlace');
+    var d=document.createElement('div'); d.className='item';
+    d.innerHTML='<div class="ih"><b>'+esc(v.titulo||v.quien||('Video '+(i+1)))+'</b>'
+      +'<span class="sub" style="margin-left:8px">'+etiqueta+'</span>'
+      +'<span style="flex:1"></span>'
+      +'<button class="btn s" data-up title="Subir">&#8593;</button>'
+      +'<button class="btn s" data-dn title="Bajar">&#8595;</button>'
+      +'<button class="btn s d" data-del>Quitar</button></div>'
+      +'<div class="g g2">'
+      + campoK('quien','De quién es',v.quien,'La banda')
+      + campoK('titulo','Título (opcional)',v.titulo,'Feliz cumple, Mariposa')
+      + '</div><div class="g g2">'
+      + campoK('url','Enlace de YouTube o archivo',v.url,'https://youtu.be/… o videos/banda.mp4')
+      + campoK('portada','Portada (solo si es archivo)',v.portada,'images/banda.webp')
+      + '</div>';
+    d.querySelectorAll('[data-k]').forEach(function(el){
+      el.addEventListener('input', function(){ v[el.dataset.k]=el.value; guardar(); }); });
+    d.querySelector('[data-del]').addEventListener('click', function(){
+      D.sala.videos.splice(i,1); guardar(); pintarSala(); });
+    d.querySelector('[data-up]').addEventListener('click', function(){
+      if(i<=0) return; var t=D.sala.videos[i-1];
+      D.sala.videos[i-1]=D.sala.videos[i]; D.sala.videos[i]=t; guardar(); pintarSala(); });
+    d.querySelector('[data-dn]').addEventListener('click', function(){
+      if(i>=D.sala.videos.length-1) return; var t=D.sala.videos[i+1];
+      D.sala.videos[i+1]=D.sala.videos[i]; D.sala.videos[i]=t; guardar(); pintarSala(); });
+    box.appendChild(d);
+  });
+}
+function pintarFinal(){ $$('[data-f]').forEach(function(el){ el.value = D.final[el.dataset.f]||''; }); }
+
+function pintarTodo(){ pintarBasicos(); pintarActos(); pintarCartas(); pintarVoces(); pintarMusica(); pintarSala(); pintarFinal(); }
+/* al cambiar las cartas cambian los numeros del mensaje final: se avisa */
+var _pcOrig = pintarCartas;
+pintarCartas = function(){ _pcOrig(); try{ pintarActos(); }catch(e){} };
+
+/* ---------------- muro de voces ---------------- */
+function pintarVoces(){
+  var box=$('#voces'); if(!box) return;
+  box.innerHTML='';
+  D.voces = D.voces || [];
+  D.voces.forEach(function(v,i){ box.appendChild(filaVoz(v,i)); });
+  var est=$('#vcEstado'); if(!est) return;
+  var n=D.voces.filter(function(v){ return v && String(v.texto||'').trim(); }).length;
+  if(!n){
+    est.className='note warn';
+    est.innerHTML='⚠ <b>El muro de voces NO se ve.</b> Añade al menos una frase y aparecerá solo, '
+      + 'tanto al final de las cartas como en el botón <b>Voces</b> de la barra de abajo.';
+  } else {
+    est.className='note ok';
+    est.innerHTML='✓ <b>El muro de voces SÍ se ve.</b> '+n+' frase'+(n===1?'':'s')
+      + '. Dura unos '+Math.round(Math.max(20,n*5.4))+' segundos.';
+  }
+}
+function filaVoz(v,i){
+  var d=document.createElement('div'); d.className='item';
+  d.innerHTML='<div class="ih"><b>'+(i+1)+'. '+esc(v.nombre||'Sin nombre')+'</b>'
+    + (v.iso && GEO[v.iso] ? '<span class="flagbox" style="width:26px;height:18px">'+flagSVG(v.iso)+'</span>' : '')
+    + '<span class="chip '+(String(v.texto||'').trim()?'ok':'wait')+'">'
+    + (String(v.texto||'').trim()?'lista':'falta la frase')+'</span>'
+    + '<span style="flex:1"></span>'
+    + '<button class="btn s" data-mv="-1">↑</button><button class="btn s" data-mv="1">↓</button>'
+    + '<button class="btn s d" data-del>Quitar</button></div>'
+    + '<div class="g">'+campoK('texto','La frase',v.texto,'De un día horrible en el trabajo.','ta')+'</div>'
+    + '<div class="g g2" style="margin-top:12px">'
+    + campoK('nombre','Quién lo dice',v.nombre,'Gabby')
+    + campoPais('iso','País',v.iso) + '</div>';
+  d.querySelectorAll('[data-k]').forEach(function(el){
+    el.addEventListener('input',  function(){ v[el.dataset.k]=el.value; guardar(); });
+    el.addEventListener('change', function(){ v[el.dataset.k]=el.value; guardar(); pintarVoces(); });
+  });
+  d.querySelector('[data-del]').addEventListener('click', function(){
+    D.voces.splice(i,1); guardar(); pintarVoces(); });
+  d.querySelectorAll('[data-mv]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var j=i+(+b.dataset.mv); if(j<0||j>=D.voces.length) return;
+      var t=D.voces[i]; D.voces[i]=D.voces[j]; D.voces[j]=t; guardar(); pintarVoces(); });
+  });
+  return d;
+}
+
+/* ---------------- guardado local ---------------- */
+var tGuardar;
+function guardar(){
+  clearTimeout(tGuardar);
+  $('#status').textContent = 'Guardando…';
+  tGuardar = setTimeout(function(){
+    try{ localStorage.setItem('m0909.editor', JSON.stringify(D)); }catch(e){}
+    $('#status').textContent = 'Guardado ✓  ' + new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+  }, 350);
+}
+
+/* ---------------- enlaces ---------------- */
+function wire(){
+  $$('.tabs button').forEach(function(b){
+    b.addEventListener('click', function(){
+      $$('.tabs button').forEach(function(x){ x.setAttribute('aria-selected', x===b?'true':'false'); });
+      $$('.panel').forEach(function(p){ p.hidden = p.id !== 'p'+'-'+b.dataset.p; });
+      scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+  $$('[data-c]').forEach(function(el){ el.addEventListener('input', function(){ D.config[el.dataset.c]=el.value; guardar(); }); });
+  $$('[data-m]').forEach(function(el){ el.addEventListener('input', function(){
+    var k=el.dataset.m;
+    D.musica[k] = k==='autoplay' ? el.value==='1' : (k==='volumen' ? (+el.value||0) : el.value); guardar(); }); });
+  $$('[data-f]').forEach(function(el){ el.addEventListener('input', function(){ D.final[el.dataset.f]=el.value; guardar(); }); });
+  $$('[data-t]').forEach(function(el){ el.addEventListener('input', function(){
+    D.textos = D.textos || {}; D.textos[el.dataset.t]=el.value; guardar(); }); });
+  window.pintarChat = function(){
+    var caja = $('#chatPrev'); if (!caja) return;
+    var txt = ($('#chatPool') && $('#chatPool').value) || '';
+    var lineas = txt.split('\n').map(function(x){ return x.trim(); }).filter(Boolean);
+    if (!lineas.length) lineas = ['{pais} súper fan se unió al vuelo','{pais} acaba de llegar','{pais} dejó sus problemas atrás'];
+    var ejemplos = ['México','Colombia','Corea del Sur','Perú','España'];
+    caja.innerHTML = lineas.slice(0,3).map(function(l, k){
+      var pais = ejemplos[k % ejemplos.length];
+      var n = [3,1,2][k % 3];
+      var frase = l.replace(/\{pais\}/g, pais)
+                   .replace(/\{n\}/g, n)
+                   .replace(/\{personas\}/g, n + (n === 1 ? ' persona' : ' personas'));
+      return '<span>' + frase.replace(/[<>&]/g, function(c){ return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c]; }) + '</span>';
+    }).join('') + (lineas.length > 3 ? '<em>… y ' + (lineas.length - 3) + ' más, salen en orden</em>' : '');
+  };
+  var cp = $('#chatPool');
+  if (cp) cp.addEventListener('input', function(){
+    setTimeout(window.pintarChat, 0);
+    D.chat = cp.value.split('\n').map(function(x){ return x.trim(); }).filter(Boolean);
+    guardar();
+  });
+
+  $('#addVoz').addEventListener('click', function(){
+    D.voces = D.voces || [];
+    D.voces.push({texto:"",nombre:"",iso:""}); guardar(); pintarVoces(); });
+  $('#addVozDemo').addEventListener('click', function(){
+    D.voces = (D.voces||[]).concat([
+      {texto:"De un día horrible en el trabajo. Llegaba, te ponía y se me olvidaba todo.",nombre:"Gabby",iso:"mx"},
+      {texto:"De la ansiedad de las 3 de la mañana.",nombre:"Adilene",iso:"us"},
+      {texto:"De sentirme sola en una ciudad que no era la mía.",nombre:"Leha",iso:"pe"}
+    ]);
+    guardar(); pintarVoces(); toast('Ejemplo cargado · bórralo cuando tengas las tuyas'); });
+  $('#addPista').addEventListener('click', function(){
+    D.musica.pistas.push({titulo:"",artista:"",archivo:""}); guardar(); pintarMusica(); });
+  $$('[data-sa]').forEach(function(el){
+    el.addEventListener('input', function(){ D.sala[el.dataset.sa]=el.value; guardar(); }); });
+  $('#addSalaVid').addEventListener('click', function(){
+    D.sala.videos.push({quien:"",titulo:"",url:"",portada:""}); guardar(); pintarSala(); });
+
+  var ISOS = Object.keys(GEO).sort(function(a,b){ return GEO[a].es.localeCompare(GEO[b].es,'es'); });
+  function sinTildes(x){ return String(x||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
+  function pintarPicker(){
+    var q = sinTildes(($('#qPais')||{}).value || '');
+    var g = $('#paisGrid'); if (!g) return;
+    var lista = ISOS.filter(function(k){
+      if (!q) return true;
+      return sinTildes(GEO[k].es).indexOf(q) >= 0 || sinTildes(GEO[k].en||'').indexOf(q) >= 0 || k.indexOf(q) === 0;
+    });
+    if (!lista.length){ g.innerHTML = '<p class="paisvacio">No encontré ese país. Prueba con otro nombre.</p>'; return; }
+    g.innerHTML = lista.map(function(k){
+      var ya = D.paises.some(function(p){ return p.iso === k; });
+      return '<button type="button" class="paisbtn' + (ya ? ' ya' : '') + '" data-iso="' + k + '" '
+        + 'title="' + esc(GEO[k].es) + '"><span class="flagbox">' + flagSVG(k) + '</span>'
+        + '<span class="nm">' + esc(GEO[k].es) + '</span>'
+        + '<span class="iso">' + k.toUpperCase() + '</span></button>';
+    }).join('');
+  }
+  window.pintarPicker = pintarPicker;
+  var qp = $('#qPais');
+  if (qp) qp.addEventListener('input', pintarPicker);
+  $('#paisGrid').addEventListener('click', function(e){
+    var b = e.target.closest('.paisbtn'); if (!b) return;
+    var iso = b.getAttribute('data-iso');
+    if (D.paises.some(function(p){ return p.iso===iso; })){
+      toast(nom(iso) + ' ya está en la lista');
+      var f = document.querySelector('[data-pais="'+iso+'"]');
+      if (f) f.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+    D.paises.push({iso:iso, cartas:[{nombre:"",ciudad:"",foto:"",video:"",texto:"",textoKo:"",audio:""}]});
+    guardar(); pintarCartas(); toast(nom(iso)+' añadido ✓');
+  });
+  pintarPicker();
+
+  $('#bLoad').addEventListener('click', function(){ $('#fileIn').click(); });
+  $('#fileIn').addEventListener('change', function(){
+    var f=this.files[0]; if(!f) return;
+    var r=new FileReader();
+    r.onload=function(){
+      var t=String(r.result), obj=null;
+      try{
+        var m=t.match(/__MD\s*=\s*"([^"]+)"/);
+        if (m) obj = JSON.parse(descifrar(m[1]));
+        else if (/var\s+DATOS\s*=/.test(t)){
+          var i=t.indexOf('{', t.search(/var\s+DATOS\s*=/));
+          var j=t.lastIndexOf('}');
+          obj = (new Function('return (' + t.slice(i, j+1) + ');'))();
+        }
+        else obj = JSON.parse(t);
+      }catch(e){ toast('No pude leer ese archivo'); return; }
+      D = fusionar(vacio(), obj); guardar(); pintarTodo(); toast('Cargado ✓');
+    };
+    r.readAsText(f); this.value='';
+  });
+  $('#bJson').addEventListener('click', function(){
+    bajar('mariposa-copia-'+fecha()+'.json', JSON.stringify(D,null,2), 'application/json');
+    toast('Copia guardada'); });
+  $('#bSave').addEventListener('click', async function(){
+    this.disabled=true; this.textContent='Preparando…';
+    try{
+      var b64 = await cifrar(JSON.stringify(D));
+      bajar('datos.js',
+        '/* MARIPOSA · contenido */\n'
+        + 'window.__MD="'+b64+'";\n', 'text/javascript');
+      toast('datos.js descargado ✓  Ponlo en la carpeta del sitio y vuelve a subirla a Netlify.');
+    }catch(e){ toast('Algo falló: '+e.message); }
+    this.disabled=false; this.textContent='⬇ Descargar datos.js';
+  });
+  $('#bPreview').addEventListener('click', async function(){
+    try{
+      var b64 = await cifrar(JSON.stringify(D));
+      localStorage.setItem('m0909.preview', b64);
+      window.open('index.html?preview=1','_blank');
+    }catch(e){ toast('No pude abrir la vista previa'); }
+  });
+}
+function fecha(){ var d=new Date(); return d.toISOString().slice(0,10); }
+function bajar(nombre, txt, tipo){
+  var b=new Blob([txt],{type:tipo+';charset=utf-8'}), u=URL.createObjectURL(b);
+  var a=document.createElement('a'); a.href=u; a.download=nombre;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(u); }, 2000);
+}
+
+/* ---------------- arranque ---------------- */
+D = vacio();
+try{
+  var g = localStorage.getItem('m0909.editor');
+  if (g) D = fusionar(vacio(), JSON.parse(g));
+}catch(e){}
+if (!D.paises.length && window.__MD){
+  try{ D = fusionar(vacio(), JSON.parse(descifrar(window.__MD))); }catch(e){}
+}
+wire(); pintarTodo();
+$('#status').textContent = 'Listo · se guarda solo mientras escribes';
+})();
+
+</script>
+</body>
+</html>

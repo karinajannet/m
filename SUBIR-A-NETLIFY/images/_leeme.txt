@@ -1,0 +1,18 @@
+CARPETA  images/
+=================
+
+Aqui van DOS cosas:
+
+1) LAS CAPTURAS DE LA CABINA  (las de sus lives)
+   - Formato ideal: VERTICAL 9:16  (por ejemplo 1080 x 1920).
+   - Nombres sin espacios ni acentos:  live-enero.jpg, live-mayo.jpg
+   - En el EDITOR, pestana "2 · La cabina", escribes:  images/live-enero.jpg
+   - Si la captura no es 9:16 no pasa nada: se recorta sola al centro.
+   - Consejo: guardalas en JPG de calidad media (menos de 400 KB cada una)
+     para que abran rapido desde Corea.
+
+2) LAS FOTOS DE LAS CARTAS
+   - Nombres sin espacios ni acentos:  carta-de-gabby.jpg
+   - En el EDITOR, pestana "3 · Cartas", escribes:  images/carta-de-gabby.jpg
+
+Todo lo que dejes en esta carpeta viaja con el sitio a Netlify.

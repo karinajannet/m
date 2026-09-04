@@ -1,0 +1,42 @@
+CARPETA  videos/
+================
+
+Aqui van los videos. Se usan en dos sitios distintos:
+
+
+1) VIDEO DE UNA CARTA  (lo mas comun)
+-------------------------------------
+Si quien mando la carta tambien mando un video, ponlo aqui y escribelo
+en el EDITOR, pestana "3 · Cartas", campo "Video":
+
+      videos/gabby.mp4
+
+Segun lo que traiga cada carta, el visor cambia solo:
+
+  - carta + video + nota de voz -> se ven los tres. Salen las pestanas
+    "Carta" y "Video", y la nota de voz suena sola.
+  - solo video -> ocupa toda la carta, sin pestanas.
+  - carta + nota de voz -> como siempre, sin rastro del video.
+
+El video arranca solo en cuanto se llega a el: al abrir una carta que
+solo trae video, y al tocar la pestana "Video" en una que ademas trae
+carta. Si el navegador no lo deja, se queda la portada con el boton.
+
+No se descarga hasta que se toca su pestana, asi la carta abre rapido.
+Mientras corre el video, la nota de voz se calla y la playlist sigue en
+pausa; al terminar o al volver a la carta, la musica vuelve sola.
+
+
+2) VIDEO DE LA CABINA
+---------------------
+En el EDITOR, pestana "2 · La cabina", campo "Video": videos/enero.mp4
+Se reproduce en silencio y en bucle, para no tapar la musica.
+Si el telefono esta en "modo ligero", el sitio usa la foto en vez del video.
+
+
+FORMATO RECOMENDADO
+-------------------
+  - MP4 (H.264 + AAC). Tambien sirve WebM.
+  - Vertical (9:16) si es de celular; se adapta solo a cualquier proporcion.
+  - Menos de 10 MB, para que abra rapido desde Corea del Sur.
+  - Nombres sin espacios ni acentos:  gabby.mp4
